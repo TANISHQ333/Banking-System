@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="en">
+
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Banking System</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #f5f5f5;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+        }
+
+        .container {
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            text-align: center;
+        }
+
+        h1 {
+            color: #333;
+        }
+
+        p {
+            color: #555;
+            font-size: 18px;
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            margin: 10px 0;
+            font-size: 16px;
+            color: #333;
+        }
+
+        input {
+            padding: 10px;
+            font-size: 16px;
+            width: 100%;
+            box-sizing: border-box;
+            margin-bottom: 15px;
+        }
+
+        button {
+            padding: 10px;
+            font-size: 16px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            cursor: pointer;
+            margin-right: 15px;
+        }
+
+        button:hover {
+            background-color: #45a049;
+        }
+
+        #balance {
+            font-size: 24px;
+            color: #333;
+        }
+
+        #status {
+            margin-bottom: 15px;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <h1>Banking System</h1>
+        <p id="status">Fill in your bank details to get started.</p>
+        <label for="bankName">Bank Name:</label>
+        <input type="text" id="bankName" placeholder="Enter bank name">
+
+        <label for="accountNumber">Account Number:</label>
+        <input type="text" id="accountNumber" placeholder="Enter A/C no." pattern="[0-9]{11,16}"
+            title="Enter a valid A/C number with 11-16 digits" required>
+
+
+        <label for="ifscCode">IFSC Code:</label>
+        <input type="text" id="ifscCode" placeholder="Enter IFSC code" pattern="[A-Z]{4}0[0-9A-Za-z]{6}"
+            title="Enter a valid IFSC code (e.g., ABCD0123456)" required>
+
+        <label for="branchAddress">Branch Address:</label>
+        <input type="text" id="branchAddress" placeholder="Enter branch address">
+
+        <button onclick="addBank()">Add Bank</button>
+
+        <hr>
+
+        <p id="balance">Balance: ₹1000</p>
+        <label for="amount">Amount:</label>
+        <input type="number" id="amount" placeholder="Enter amount">
+        <button onclick="deposit()">Deposit</button>
+        <button onclick="withdraw()">Withdraw</button>
+    </div>
+
+    <script>
+        let bankDetails = null;
+        let balance = 1000;
+        
+        function addBank() {
+            const bankName = document.getElementById("bankName").value.trim();
+            const accountNumber = document.getElementById("accountNumber").value.trim();
+            const ifscCode = document.getElementById("ifscCode").value.trim();
+            const branchAddress = document.getElementById("branchAddress").value.trim();
+            const statusElement = document.getElementById("status");
+
+            if (bankName && validateIFSC(ifscCode) && branchAddress) {
+                bankDetails = { bankName, ifscCode, branchAddress };
+                statusElement.textContent = `Thanks for adding bank details, ${bankName}!`;
+            } else {
+                statusElement.textContent = "Please fill in all the bank details correctly.";
+            }
+        }
+
+
+        function validateAccountNumber(accountNumber) {
+            return true;
+        }
+
+        function validateIFSC(ifscCode) {
+            const regex = /^[A-Z]{4}[0]{1}[0-9A-Za-z]{6}$/;
+            return regex.test(ifscCode);
+        }
+
+        function updateBalance() {
+            document.getElementById("balance").textContent = `Balance: ₹${balance.toFixed(2)}`;
+        }
+
+        function deposit() {
+            const amount = parseFloat(document.getElementById("amount").value);
+            const statusElement = document.getElementById("status");
+
+            if (!isNaN(amount) && amount > 0) {
+                balance += amount;
+                updateBalance();
+                statusElement.textContent = `Deposited ₹${amount.toFixed(2)} successfully!`;
+            } else {
+                statusElement.textContent = "Please enter a valid amount.";
+            }
+        }
+
+        function withdraw() {
+            const amount = parseFloat(document.getElementById("amount").value);
+            const statusElement = document.getElementById("status");
+
+            if (!isNaN(amount) && amount > 0 && amount <= balance) {
+                balance -= amount;
+                updateBalance();
+                statusElement.textContent = `Withdrawn ₹${amount.toFixed(2)} successfully!`;
+            } else {
+                statusElement.textContent = "Invalid amount or insufficient funds.";
+            }
+        }
+        updateBalance(); // Initialize the balance display
+    </script>
+</body>
+
+</html>
